@@ -1,5 +1,4 @@
 import { faker } from '@faker-js/faker';
-import { Page } from '@playwright/test';
 
 import { createAuxContext } from '../fixtures/createAuxContext';
 import { Users } from '../fixtures/userStates';
@@ -21,7 +20,6 @@ test.use({ storageState: Users.user1.state });
 test.describe.serial('OC - Livechat', () => {
 	let poLiveChat: OmnichannelLiveChat;
 	let poHomeOmnichannel: HomeOmnichannel;
-	let livechatPage: Page;
 
 	test.beforeAll(async ({ api }) => {
 		const statusCode = (await api.post('/livechat/users/agent', { username: 'user1' })).status();
@@ -29,9 +27,7 @@ test.describe.serial('OC - Livechat', () => {
 	});
 
 	test.beforeAll(async ({ browser, api }) => {
-		const { page } = await createAuxContext(browser, Users.user1);
-
-		livechatPage = page;
+		const { page: livechatPage } = await createAuxContext(browser, Users.user1);
 
 		poLiveChat = new OmnichannelLiveChat(livechatPage, api);
 	});
@@ -42,7 +38,7 @@ test.describe.serial('OC - Livechat', () => {
 		await page.locator('.main-content').waitFor();
 		await poHomeOmnichannel.sidenav.waitForOmnichannelOnlineStatus();
 
-		await livechatPage.goto('/livechat');
+		await poLiveChat.page.goto('/livechat')
 	});
 
 	test.afterAll(async ({ api }) => {
