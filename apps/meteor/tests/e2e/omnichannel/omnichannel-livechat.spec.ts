@@ -27,8 +27,7 @@ test.describe.serial('OC - Livechat', () => {
 	});
 
 	test.beforeAll(async ({ browser, api }) => {
-		const { page: livechatPage } = await createAuxContext(browser, Users.user1);
-
+		const { page: livechatPage } = await createAuxContext(browser, Users.user1, '/livechat');
 		poLiveChat = new OmnichannelLiveChat(livechatPage, api);
 	});
 
@@ -37,8 +36,6 @@ test.describe.serial('OC - Livechat', () => {
 		await page.goto('/');
 		await page.locator('.main-content').waitFor();
 		await poHomeOmnichannel.sidenav.waitForOmnichannelOnlineStatus();
-
-		await poLiveChat.page.goto('/livechat')
 	});
 
 	test.afterAll(async ({ api }) => {
