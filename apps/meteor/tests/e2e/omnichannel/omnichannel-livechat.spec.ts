@@ -18,7 +18,7 @@ const secondUser = {
 test.use({ storageState: Users.user1.state });
 
 test.describe.serial('OC - Livechat', () => {
-	let poLiveChat: OmnichannelLiveChat | undefined;
+	let poLiveChat: OmnichannelLiveChat;
 	let poHomeOmnichannel: HomeOmnichannel;
 
 	test.beforeAll(async ({ api }) => {
