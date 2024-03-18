@@ -1,7 +1,9 @@
 import type { IAdminUserTabs } from '@rocket.chat/core-typings';
 import { Button, ButtonGroup, Callout, ContextualbarIcon, Tabs, TabsItem } from '@rocket.chat/fuselage';
 import { useDebouncedValue } from '@rocket.chat/fuselage-hooks';
-import { usePermission, useRouteParameter, useTranslation, useRouter } from '@rocket.chat/ui-contexts';
+import type { OptionProp } from '@rocket.chat/ui-client';
+import { usePermission, useRouteParameter, useTranslation, useRouter, useEndpoint } from '@rocket.chat/ui-contexts';
+import { useQuery } from '@tanstack/react-query';
 import type { ReactElement } from 'react';
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 
@@ -23,6 +25,7 @@ import usePendingUsersCount from './hooks/usePendingUsersCount';
 
 export type UsersFilters = {
 	text: string;
+	roles: OptionProp[];
 };
 
 export type UsersTableSortingOptions = 'name' | 'username' | 'emails.address' | 'status' | 'active';
@@ -43,11 +46,14 @@ const AdminUsersPage = (): ReactElement => {
 
 	const isCreateUserDisabled = useShouldPreventAction('activeUsers');
 
+	const getRoles = useEndpoint('GET', '/v1/roles.list');
+	const { data } = useQuery(['roles'], async () => getRoles());
+
 	const paginationData = usePagination();
 	const sortData = useSort<UsersTableSortingOptions>('name');
 
 	const [tab, setTab] = useState<IAdminUserTabs>('all');
-	const [userFilters, setUserFilters] = useState<UsersFilters>({ text: '' });
+	const [userFilters, setUserFilters] = useState<UsersFilters>({ text: '', roles: [] });
 
 	const searchTerm = useDebouncedValue(userFilters.text, 500);
 	const prevSearchTerm = useRef('');
@@ -58,6 +64,7 @@ const AdminUsersPage = (): ReactElement => {
 		sortData,
 		paginationData,
 		tab,
+		selectedRoles: useMemo(() => userFilters.roles.map((role) => role.id), [userFilters.roles]),
 	});
 
 	const pendingUsersCount = usePendingUsersCount(filteredUsersQueryResult.data?.users);
@@ -116,6 +123,9 @@ const AdminUsersPage = (): ReactElement => {
 						<TabsItem selected={tab === 'pending'} onClick={() => handleTabChangeAndSort('pending')}>
 							{pendingUsersCount ? `${t('Pending')} (${pendingUsersCount})` : t('Pending')}
 						</TabsItem>
+						<TabsItem selected={tab === 'active'} onClick={() => handleTabChangeAndSort('active')}>
+							{t('Active')}
+						</TabsItem>
 					</Tabs>
 					<UsersTable
 						filteredUsersQueryResult={filteredUsersQueryResult}
@@ -125,6 +135,7 @@ const AdminUsersPage = (): ReactElement => {
 						sortData={sortData}
 						tab={tab}
 						isSeatsCapExceeded={isSeatsCapExceeded}
+						roleData={data}
 					/>
 				</PageContent>
 			</Page>
