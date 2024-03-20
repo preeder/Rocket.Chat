@@ -2,7 +2,7 @@ import { Media } from '@rocket.chat/core-services';
 import type { IRoom } from '@rocket.chat/core-typings';
 import { Messages, Rooms, Users } from '@rocket.chat/models';
 import type { Notifications } from '@rocket.chat/rest-typings';
-import { isGETRoomsNameExists } from '@rocket.chat/rest-typings';
+import { isGETRoomsNameExists, isRoomsExportProps } from '@rocket.chat/rest-typings';
 import { Meteor } from 'meteor/meteor';
 
 import { isTruthy } from '../../../../lib/isTruthy';
@@ -553,14 +553,10 @@ API.v1.addRoute(
 
 API.v1.addRoute(
 	'rooms.export',
-	{ authRequired: true },
+	{ authRequired: true, validateParams: isRoomsExportProps },
 	{
 		async post() {
 			const { rid, type } = this.bodyParams;
-
-			if (!rid || !type || !['email', 'file'].includes(type)) {
-				throw new Meteor.Error('error-invalid-params');
-			}
 
 			if (!(await hasPermissionAsync(this.userId, 'mail-messages', rid))) {
 				throw new Meteor.Error('error-action-not-allowed', 'Mailing is not allowed');
