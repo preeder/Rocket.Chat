@@ -1893,7 +1893,7 @@ describe('[Rooms]', function () {
 				.expect((res) => {
 					expect(res.body).to.have.property('success', false);
 					expect(res.body).to.have.property('errorType', 'invalid-params');
-					expect(res.body.error).to.have.property('error', "must have required property 'rid' [invalid-params]");
+					expect(res.body).to.have.property('error', "must have required property 'rid' [invalid-params]");
 				});
 		});
 
@@ -1912,7 +1912,7 @@ describe('[Rooms]', function () {
 				.expect((res) => {
 					expect(res.body).to.have.property('success', false);
 					expect(res.body).to.have.property('errorType', 'invalid-params');
-					expect(res.body.error).to.have.property('error', "must have required property 'type' [invalid-params]");
+					expect(res.body).to.have.property('error', "must have required property 'type' [invalid-params]");
 				});
 		});
 
@@ -1932,7 +1932,7 @@ describe('[Rooms]', function () {
 				.expect((res) => {
 					expect(res.body).to.have.property('success', false);
 					expect(res.body).to.have.property('errorType', 'error-invalid-dates');
-					expect(res.body.error).to.have.property('error', 'From date cannot be after To date [error-invalid-dates]');
+					expect(res.body).to.have.property('error', 'From date cannot be after To date [error-invalid-dates]');
 				});
 		});
 
