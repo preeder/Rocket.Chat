@@ -219,12 +219,12 @@ const RoomsExportSchema = {
 		dateFrom: {
 			type: 'string',
 			nullable: true,
-			format: 'date-time',
+			format: 'date',
 		},
 		dateTo: {
 			type: 'string',
 			nullable: true,
-			format: 'date-time',
+			format: 'date',
 		},
 		format: {
 			type: 'string',
