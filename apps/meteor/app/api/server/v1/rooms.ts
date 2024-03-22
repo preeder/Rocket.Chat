@@ -577,10 +577,6 @@ API.v1.addRoute(
 				const { dateFrom, dateTo } = this.bodyParams;
 				const { format } = this.bodyParams;
 
-				if (!['html', 'json'].includes(format || '')) {
-					throw new Meteor.Error('error-invalid-format');
-				}
-
 				const convertedDateFrom = dateFrom ? new Date(dateFrom) : new Date(0);
 				const convertedDateTo = dateTo ? new Date(dateTo) : new Date();
 				convertedDateTo.setDate(convertedDateTo.getDate() + 1);
@@ -606,10 +602,6 @@ API.v1.addRoute(
 
 				if ((!toUsers || toUsers.length === 0) && (!toEmails || toEmails.length === 0)) {
 					throw new Meteor.Error('error-invalid-recipient');
-				}
-
-				if (messages?.length === 0) {
-					throw new Meteor.Error('error-invalid-messages');
 				}
 
 				const result = await dataExport.sendViaEmail(

@@ -1975,7 +1975,7 @@ describe('[Rooms]', function () {
 				.expect(400)
 				.expect((res) => {
 					expect(res.body).to.have.property('success', false);
-					expect(res.body).to.have.property('errorType', 'error-invalid-format');
+					expect(res.body).to.have.property('errorType', 'invalid-params');
 				});
 		});
 
@@ -2054,7 +2054,7 @@ describe('[Rooms]', function () {
 				.expect(400)
 				.expect((res) => {
 					expect(res.body).to.have.property('success', false);
-					expect(res.body).to.have.property('errorType', 'error-invalid-messages');
+					expect(res.body).to.have.property('errorType', 'invalid-params');
 				});
 		});
 
