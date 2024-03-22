@@ -47,8 +47,8 @@ export const App: FunctionalComponent = () => {
 
 	useEffect(() => {
 		const handleVisibilityChange = () => {
-			dispatch(({ visible }) => ({
-				visible: !visible,
+			dispatch(() => ({
+				visible: !visibility.hidden,
 			}));
 		};
 
