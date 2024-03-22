@@ -168,7 +168,7 @@ type RoomsExportProps = RoomsExportFileProps | RoomsExportEmailProps;
 
 type RoomsExportFileProps = {
 	rid: IRoom['_id'];
-	type: 'file';
+	type: 'file' | 'email';
 	format: 'html' | 'json';
 	dateFrom?: string;
 	dateTo?: string;
@@ -176,7 +176,7 @@ type RoomsExportFileProps = {
 
 type RoomsExportEmailProps = {
 	rid: IRoom['_id'];
-	type: 'email';
+	type: 'file' | 'email';
 	toUsers?: IUser['username'][];
 	toEmails?: string[];
 	additionalEmails?: string;
