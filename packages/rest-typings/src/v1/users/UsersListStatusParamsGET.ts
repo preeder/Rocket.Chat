@@ -7,13 +7,12 @@ const ajv = new Ajv({
 });
 
 export type UsersListStatusParamsGET = PaginatedRequest<{
-	status?: 'active' | 'all' | 'deactivated';
+	status?: 'active' | 'deactivated';
 	hasLoggedIn?: boolean;
 	type?: string;
 	roles?: string[];
 	searchTerm?: string;
 }>;
-
 const UsersListStatusParamsGetSchema = {
 	type: 'object',
 	properties: {
