@@ -10,9 +10,11 @@ const SAMLLoginRoute = () => {
 		const { token } = router.getRouteParameters();
 		Meteor.loginWithSamlToken(token, (error?: unknown) => {
 			if (error) {
+				console.log('saml token login error, dispatch toast');
 				dispatchToastMessage({ type: 'error', message: error });
 			}
 
+			console.log('SAML login callback: redirect to home');
 			router.navigate(
 				{
 					pathname: '/home',

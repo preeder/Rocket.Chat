@@ -105,12 +105,14 @@ export class SAML {
 			user = await Users.findOne(query);
 
 			if (user) {
+				console.log('user found with custom identifier');
 				customIdentifierMatch = true;
 			}
 		}
 
 		// Second, try searching by username or email (according to the immutableProperty setting)
 		if (!user) {
+			console.log('user not found, searching by username or email', userObject.username);
 			const expression = userObject.emailList.map((email) => `^${escapeRegExp(email)}$`).join('|');
 			const emailRegex = new RegExp(expression, 'i');
 
@@ -127,7 +129,12 @@ export class SAML {
 
 		const active = !settings.get('Accounts_ManuallyApproveNewUsers');
 
+		if (user) {
+			console.log('has an user by now');
+		}
+
 		if (!user) {
+			console.log('user not found, inserting', username);
 			// If we received any role from the mapping, use them - otherwise use the default role for creation.
 			const roles = userObject.roles?.length ? userObject.roles : ensureArray<string>(defaultUserRole.split(','));
 
@@ -450,14 +457,17 @@ export class SAML {
 
 		if (globalSettings.immutableProperty === 'Username') {
 			if (username) {
+				console.log('searching by username', username);
 				return Users.findOne({
 					username,
 				});
 			}
 
+			console.log('not searching');
 			return;
 		}
 
+		console.log('searching by email');
 		return Users.findOne({
 			'emails.address': emailRegex,
 		});

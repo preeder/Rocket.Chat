@@ -65,9 +65,11 @@ export const handleLogin = <TLoginFunction extends (...args: any[]) => Promise<a
 		return login(...loginArgs)
 			.catch(async (error: LoginError | undefined) => {
 				if (!isTotpRequiredError(error)) {
+					console.log('Login function failed');
 					return Promise.reject(error);
 				}
 
+				console.log('checking 2fa request.');
 				const { process2faAsyncReturn } = await import('./process2faReturn');
 				return process2faAsyncReturn({
 					emailOrUsername: typeof loginArgs[0] === 'string' ? loginArgs[0] : undefined,
@@ -75,15 +77,21 @@ export const handleLogin = <TLoginFunction extends (...args: any[]) => Promise<a
 					onCode: (code: string) => loginWithTOTP(...loginArgs, code),
 				});
 			})
-			.then((result: unknown) => callback?.(undefined, result))
+			.then((result: unknown) => {
+				console.log('calling login function callback');
+				return callback?.(undefined, result);
+			})
 			.catch((error: LoginError | undefined) => {
 				if (!isTotpInvalidError(error)) {
+					console.log('calling login function callback with error');
 					callback?.(error);
 					return;
 				}
 
+				console.log('error on login');
 				Promise.all([import('../../../app/utils/lib/i18n'), import('../toast')]).then(([{ t }, { dispatchToastMessage }]) => {
 					dispatchToastMessage({ type: 'error', message: t('Invalid_two_factor_code') });
+					console.log('calling login function callback on invalid 2fa code.');
 					callback?.(undefined);
 				});
 			});
